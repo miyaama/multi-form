@@ -61,6 +61,7 @@ export const FirstStep = () => {
         <button
           className={clsx(
             "h-11 w-[150px]",
+            "font-light",
             "px-6",
             "rounded-md",
             "text-white",

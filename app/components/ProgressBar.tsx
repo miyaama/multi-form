@@ -1,7 +1,8 @@
 "use client";
 
-import { useFormState } from "./FormContext";
 import clsx from "clsx";
+
+import { useFormState } from "./FormContext";
 
 export const ProgressBar = () => {
   const { step } = useFormState();

@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
+import { setLocalStorage, STORAGE_KEYS } from "../utils/storage";
 import { useFormState } from "./FormContext";
-
+import clsx from "clsx";
+import { useState, ChangeEvent, FormEvent } from "react";
 export const SecondStep = () => {
   const { onHandleNext, onHandleBack, setFormData, formData } = useFormState();
   const [film, setFilm] = useState(formData.film);
   const [taste, setTaste] = useState(formData.taste);
+  const [disabled, setDisabled] = useState(false);
 
   const handleFilmChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilm(e.target.value);
@@ -16,17 +18,26 @@ export const SecondStep = () => {
     setTaste(e.target.value);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setDisabled(true);
     setFormData((prevFormData) => ({ ...prevFormData, film, taste }));
-    // localStorage.setItem("")
+    setLocalStorage(STORAGE_KEYS.FILM, film);
+    setLocalStorage(STORAGE_KEYS.TASTE, taste);
+
+    await fetch("/api/form", {
+      method: "POST",
+      body: JSON.stringify(formData),
+    });
+
     onHandleNext();
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className="flex flex-col gap-1">
-        <label htmlFor="film" className="font-extralight">
+    <form className="flex flex-col h-full" onSubmit={handleSubmit}>
+      <div className="flex flex-col mb-3">
+        <label htmlFor="film" className="font-extralight mb-1">
           What is your favorite TV series?
         </label>
         <input
@@ -39,36 +50,48 @@ export const SecondStep = () => {
           required
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <label htmlFor="taste" className="font-extralight">
+      <div className="flex flex-col mb-3">
+        <label htmlFor="taste" className="font-extralight mb-1">
           Choose the taste of popcorn
         </label>
         <select
           className="h-11 px-4 border rounded-md text-black"
           name="taste"
           id="taste"
-          defaultValue=""
           value={taste}
           onChange={handleTasteChange}
           required
         >
-          <option value="" disabled className="text-gray-400">
-            Please choose an option
-          </option>
           <option value="salty">Salty</option>
           <option value="sweet">Sweet</option>
           <option value="cheese">Cheese</option>
           <option value="caramel">Caramel</option>
         </select>
       </div>
-      <div className="flex justify-between space-x-4">
+      <div className="flex justify-between space-x-4 mt-auto">
         <button
           onClick={onHandleBack}
-          className="h-11 px-6 bg-black rounded-md text-white  border border-neutral-800 w-1/2 hover:border-neutral-500 font-light"
+          className={clsx(
+            "h-11 w-1/2",
+            "px-6",
+            "font-light",
+            "bg-black text-white",
+            "border rounded-md border-neutral-800 hover:border-neutral-500"
+          )}
         >
           Back
         </button>
-        <button className="h-11 px-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-600 rounded-md text-white w-1/2 font-light">
+        <button
+          className={clsx(
+            "h-11 w-1/2",
+            "px-6",
+            "bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-600",
+            "text-white font-light",
+            "rounded-md",
+            "disabled:text-gray-300 disabled:cursor-not-allowed"
+          )}
+          disabled={disabled}
+        >
           Submit
         </button>
       </div>

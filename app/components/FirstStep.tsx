@@ -1,6 +1,9 @@
 "use client";
 
+import clsx from "clsx";
 import { useState, ChangeEvent, FormEvent } from "react";
+
+import { setLocalStorage, STORAGE_KEYS } from "../utils/storage";
 import { useFormState } from "./FormContext";
 
 export const FirstStep = () => {
@@ -19,15 +22,15 @@ export const FirstStep = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormData((prevFormData) => ({ ...prevFormData, firstName, email }));
-    localStorage.setItem("FIRST_NAME", firstName);
-    localStorage.setItem("SECOND_NAME", email);
+    setLocalStorage(STORAGE_KEYS.FIRST_NAME, firstName);
+    setLocalStorage(STORAGE_KEYS.EMAIL, email);
     onHandleNext();
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className="flex flex-col gap-1">
-        <label htmlFor="firstName" className="font-extralight">
+    <form className="flex flex-col h-full" onSubmit={handleSubmit}>
+      <div className="flex flex-col mb-3">
+        <label htmlFor="firstName" className="font-extralight mb-1">
           Name
         </label>
         <input
@@ -40,8 +43,8 @@ export const FirstStep = () => {
           required
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="font-extralight">
+      <div className="flex flex-col">
+        <label htmlFor="email" className="font-extralight mb-1">
           Email
         </label>
         <input
@@ -51,11 +54,19 @@ export const FirstStep = () => {
           value={email}
           onChange={handleEmailChange}
           className="h-11 px-4 border rounded-md text-black"
-          // required
+          required
         />
       </div>
-      <div className="flex justify-end space-x-6">
-        <button className="h-11 px-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-600 rounded-md text-white w-[150px]">
+      <div className="flex justify-end mt-auto">
+        <button
+          className={clsx(
+            "h-11 w-[150px]",
+            "px-6",
+            "rounded-md",
+            "text-white",
+            "bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-600"
+          )}
+        >
           Next
         </button>
       </div>

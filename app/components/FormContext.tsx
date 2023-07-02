@@ -7,10 +7,10 @@ import {
   createContext,
   useContext,
   useState,
-  useEffect,
 } from "react";
+import { getLocalStorage, STORAGE_KEYS } from "../utils/storage";
 
-interface IFormData {
+export interface IFormData {
   firstName: string;
   email: string;
   film: string;
@@ -38,22 +38,25 @@ const FormContext = createContext<IFormContext>({
   setFormData: () => {},
 });
 
+const restoreData = (): IFormData => {
+  // getLocalStorage returns empty string if localStorage didn't find the value
+  // without values we get default state
+  const firstName = getLocalStorage(STORAGE_KEYS.FIRST_NAME);
+  const email = getLocalStorage(STORAGE_KEYS.EMAIL);
+  const film = getLocalStorage(STORAGE_KEYS.FILM);
+  const taste = getLocalStorage(STORAGE_KEYS.TASTE);
+
+  return { firstName, email, film, taste };
+};
+
 interface IProps {
   children: ReactNode;
 }
 
 export const FormProvider = ({ children }: IProps) => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<IFormData>({
-    firstName: "",
-    email: "",
-    film: "",
-    taste: "",
-  });
-
-  useEffect(() => {
-    localStorage.getItem("");
-  }, []);
+  // restoring data from localStorage
+  const [formData, setFormData] = useState<IFormData>(restoreData());
 
   const onHandleNext = () => {
     setStep((prevValue) => prevValue + 1);

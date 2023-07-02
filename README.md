@@ -1,4 +1,4 @@
-## Multi-spep form 
+## Multi-step form 
 
 life: https://multi-form-six.vercel.app/
 

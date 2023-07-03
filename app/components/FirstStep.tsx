@@ -7,7 +7,7 @@ import { setLocalStorage, STORAGE_KEYS } from "../utils/storage";
 import { useFormState } from "./FormContext";
 
 export const FirstStep = () => {
-  const { onHandleNext, setFormData, formData } = useFormState();
+  const { onHandleNext, setFormData, formData, step } = useFormState();
   const [firstName, setFirstName] = useState(formData.firstName);
   const [email, setEmail] = useState(formData.email);
 
@@ -24,6 +24,7 @@ export const FirstStep = () => {
     setFormData((prevFormData) => ({ ...prevFormData, firstName, email }));
     setLocalStorage(STORAGE_KEYS.FIRST_NAME, firstName);
     setLocalStorage(STORAGE_KEYS.EMAIL, email);
+    
     onHandleNext();
   };
 

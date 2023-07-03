@@ -1,6 +1,7 @@
 "use client";
 
 export enum STORAGE_KEYS {
+  STEP = "STEP",
   FIRST_NAME = "FIRST_NAME",
   EMAIL = "EMAIL",
   FILM = "FILM",
@@ -25,4 +26,14 @@ export const setLocalStorage = (key: STORAGE_KEYS, value: unknown) => {
   const data = typeof value === "string" ? value : JSON.stringify(value);
 
   return getStorage()?.setItem(key, data);
+};
+
+export const clearStorage = () => {
+  const storage = getStorage();
+
+  storage?.removeItem(STORAGE_KEYS.EMAIL);
+  storage?.removeItem(STORAGE_KEYS.FILM);
+  storage?.removeItem(STORAGE_KEYS.FIRST_NAME);
+  storage?.removeItem(STORAGE_KEYS.TASTE);
+  storage?.removeItem(STORAGE_KEYS.STEP);
 };

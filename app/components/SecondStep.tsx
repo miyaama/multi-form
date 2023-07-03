@@ -5,7 +5,8 @@ import { useFormState } from "./FormContext";
 import clsx from "clsx";
 import { useState, ChangeEvent, FormEvent } from "react";
 export const SecondStep = () => {
-  const { onHandleNext, onHandleBack, setFormData, formData } = useFormState();
+  const { onHandleNext, onHandleBack, setFormData, formData, step } =
+    useFormState();
   const [film, setFilm] = useState(formData.film);
   const [taste, setTaste] = useState(formData.taste);
   const [disabled, setDisabled] = useState(false);
@@ -30,6 +31,8 @@ export const SecondStep = () => {
       method: "POST",
       body: JSON.stringify(formData),
     });
+
+    
 
     onHandleNext();
   };
